@@ -3,6 +3,9 @@
     "homePage": "https://github.com/goodwright/nfcore-wrappers",
     "repos": {
         "nf-core/modules": {
+            "nf-core/cutadapt": {
+                "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
+            },
             "nf-core/fastqc": {
                 "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c"
             }
