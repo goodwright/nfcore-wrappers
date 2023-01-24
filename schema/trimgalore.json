@@ -23,7 +23,7 @@
         },
         {
             "name": "Trimming Report",
-            "description": "A text file summarising the trumming that was done.",
+            "description": "A text file summarising the trimming that was done.",
             "filetype": "txt",
             "process": "TRIMGALORE"
         }

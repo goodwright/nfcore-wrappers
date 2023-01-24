@@ -19,7 +19,7 @@
             "name": "Bowtie Index",
             "description": "The folder containing the Bowtie index.",
             "filetype": "",
-            "process": "TRIMGALORE"
+            "process": "BOWTIE_BUILD"
         }
     ]
 }
