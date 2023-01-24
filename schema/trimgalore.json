@@ -7,7 +7,7 @@
                 "fastq": {
                     "name": "FASTQ",
                     "type": "file",
-                    "pattern": "fq\\.gz|fastq\\.gz",
+                    "pattern": "fq\\.gz$|fastq\\.gz$",
                     "required": true,
                     "description": "A FASTQ file to clean up."
                 }
