@@ -21,5 +21,12 @@
             }
         }
     },
-    "outputs": []
+    "outputs": [
+        {
+            "name": "STAR Index",
+            "description": "The folder containing the STAR index.",
+            "filetype": "",
+            "process": "STAR_GENOMEGENERATE"
+        }
+    ]
 }

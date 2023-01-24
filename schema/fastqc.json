@@ -14,5 +14,12 @@
             }
         }
     },
-    "outputs": []
+    "outputs": [
+        {
+            "name": "HTML Report",
+            "description": "The summary report for these reads.",
+            "filetype": "html",
+            "process": "FASTQC"
+        }
+    ]
 }
