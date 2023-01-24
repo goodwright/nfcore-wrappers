@@ -1,0 +1,18 @@
+{
+    "inputs": {
+        "file_options": {
+            "name": "File options",
+            "description": "Files needed to run the module.",
+            "properties": {
+                "fasta": {
+                    "name": "FASTA",
+                    "type": "file",
+                    "pattern": "fa|fasta|fa\\.gz|fasta\\.gz",
+                    "required": true,
+                    "description": "A FASTA file to index."
+                }
+            }
+        }
+    },
+    "outputs": []
+}
