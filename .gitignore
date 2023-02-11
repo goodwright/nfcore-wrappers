@@ -1,5 +1,12 @@
+.nextflow*
+work/
+results/
+test_output/
+output/
 .DS_Store
-results
-work
-*.log*
-.nextflow
+*.code-workspace
+.screenrc
+.*.sw?
+__pycache__
+*.pyo
+*.pyc
