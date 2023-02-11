@@ -1,6 +1,6 @@
 nextflow.enable.dsl=2
 
-include { TRIMGALORE } from "../modules/nf-core/modules/nf-core/trimgalore/main"
+include { TRIMGALORE } from "../modules/nf-core/trimgalore/main"
 
 workflow {
 
