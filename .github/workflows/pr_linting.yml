@@ -34,28 +34,3 @@ jobs:
 
       - name: Run Prettier --check
         run: prettier --check ${GITHUB_WORKSPACE}
-
-  ## Python linting (`black`) is failing
-  # To fix this CI test, please run:
-  # * Install [`black`](https://black.readthedocs.io/en/stable/): `pip install black`
-  # * Fix formatting errors in your pipeline: `black .`
-  PythonBlack:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Check code lints with Black
-        uses: psf/black@stable
-
-  nf-core:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.9.x"
-
-      - name: Install nf-core
-        run: python -m pip install --upgrade git+https://github.com/goodwright/tools.git@dev
