@@ -1,0 +1,36 @@
+name: linting
+# This workflow is triggered on PRs to dev or master
+# It runs linting tools for nextflow, python and markdown/yaml/json
+
+on:
+  pull_request:
+    branches:
+      - master
+      - dev
+
+jobs:
+  EditorConfig:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+
+      - name: Install editorconfig-checker
+        run: npm install -g editorconfig-checker
+
+      - name: Run ECLint check
+        run: editorconfig-checker -exclude README.md $(find .* -type f | grep -v '.git\|.py\|.md\|json\|yml\|yaml\|html\|css\|work\|.nextflow\|log.txt\|Makefile|.xlsx\|.xls|Dockerfile')
+
+  Prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+
+      - name: Install Prettier
+        run: npm install -g prettier
+
+      - name: Run Prettier --check
+        run: prettier --check ${GITHUB_WORKSPACE}
