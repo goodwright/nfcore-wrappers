@@ -1,0 +1,109 @@
+name: unit-tests
+# This workflow is triggered on PRs to dev or master
+# It runs units tests for CI
+
+on:
+  pull_request:
+    branches:
+      - master
+      - dev
+
+# Cancel if a newer run is started
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ##############################
+  ###   NEXTFLOW WRAPPER TESTS  ###
+  ##############################
+  module_tests:
+    name: ${{ matrix.NXF_VER }} ${{ matrix.profile }} ${{ matrix.tags }}
+    runs-on: ubuntu-20.04
+    env:
+      NXF_VER: ${{ matrix.NXF_VER }}
+      NXF_ANSI_LOG: false
+      CAPSULE_LOG: none
+    strategy:
+      fail-fast: false
+      matrix:
+        NXF_VER: ["22.10.1", ""]
+        profile: ["docker", "singularity"]
+        tags:
+          # Modules
+          - wrappers/modules/fastqc
+          - wrappers/modules/star
+          - wrappers/modules/trimgalore
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+
+      - name: Setup Pip Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip pytest-workflow
+
+      - name: Restore Keys
+        uses: actions/cache@v3
+        with:
+          path: /usr/local/bin/nextflow
+          key: ${{ runner.os }}-nextflow-${{ matrix.nxf_version }}
+          restore-keys: |
+            ${{ runner.os }}-nextflow-
+
+      - name: Install Nextflow
+        env:
+          CAPSULE_LOG: none
+        run: |
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Set up Singularity
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-singularity@v7
+        with:
+          singularity-version: 3.8.3
+
+      - name: Install nf-core
+        run: python -m pip install --upgrade git+https://github.com/goodwright/tools.git@dev
+
+      # - name: Restore nf-core packages
+      #   run: nf-core modules list local
+
+      # - name: Run pytest-workflow
+      #   # only use one thread for pytest-workflow to avoid race condition on conda cache.
+      #   run: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.tags }} --symlink --kwdof --color=yes
+
+      - name: Run pytest-workflow
+        uses: Wandalen/wretry.action@v1.0.36
+        with:
+          command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.tags }} --symlink --kwdof --color=yes
+          attempt_limit: 3
+
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt update
+          sudo apt install bat
+          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /home/runner/pytest_workflow_*/*/.nextflow.log
+            /home/runner/pytest_workflow_*/*/log.out
+            /home/runner/pytest_workflow_*/*/log.err
