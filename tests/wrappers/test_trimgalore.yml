@@ -1,0 +1,6 @@
+- name: "test_wrappers_trimgalore"
+  command: nextflow run ./wrappers/trimgalore.nf -c ./tests/config/nextflow.config --reads https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz 
+  tags:
+    - "wrappers"
+    - "wrappers/modules"
+    - "wrappers/modules/trimgalore"
