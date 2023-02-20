@@ -125,7 +125,7 @@ def main(target):
                 file_str = file_str[:-2]
                 file_str = file_str + "]"
         else:
-            file_str = file_str + f"[ id:params.{input_name}.baseName, "
+            file_str = file_str + f"[ [id:file(params.{input_name}).baseName], "
 
             if len(input['vars']) == 1:
                 file_str = file_str + f"file(params.{input_name}, checkIfExists: true) "
@@ -143,7 +143,7 @@ def main(target):
 
     wrapper_path = path.join("./wrappers", module_name.lower() + ".nf")
     with open(Path(wrapper_path), "w") as fh:
-        fh.write("nextflow.enable.dsl=2\n\n")
+        fh.write("#!/usr/bin/env nextflow\n\n")
         fh.write(f"include {{ {module_name} }} from \"../modules/nf-core/{target}/main\"\n\n")
         fh.write("workflow {\n\n")
 
