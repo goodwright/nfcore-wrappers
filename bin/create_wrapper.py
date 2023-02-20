@@ -205,7 +205,7 @@ def main(target):
                 fh.write(f"                    \"name\": \"UNKNOWN\",\n")
                 fh.write(f"                    \"type\": \"UNKNOWN\",\n")
                 fh.write(f"                    \"pattern\": \"UNKNOWN\",\n")
-                fh.write(f"                    \"required\": \"true\",\n")
+                fh.write(f"                    \"required\": true,\n")
                 fh.write(f"                    \"description\": \"UNKNOWN\"\n")
 
             if idx == len(param_list) - 1:
