@@ -175,7 +175,7 @@ def main(target):
         fh.write(f"- name: \"test_wrappers_{module_name.lower()}\"\n")
         fh.write(f"  {command_str}\n")
         fh.write("  tags:\n")
-        fh.write("    - \"wrappers/\"\n")
+        fh.write("    - \"wrappers\"\n")
         fh.write("    - \"wrappers/modules\"\n")
         fh.write(f"    - \"wrappers/modules/{module_name.lower()}\"\n")
 
