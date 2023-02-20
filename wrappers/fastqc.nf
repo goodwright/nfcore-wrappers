@@ -1,11 +1,13 @@
-nextflow.enable.dsl=2
+#!/usr/bin/env nextflow
 
 include { FASTQC } from "../modules/nf-core/fastqc/main"
 
 workflow {
 
-    meta = [id:file(params.fastq).name, single_end: true]
+    ch_reads = [ [id:file(params.reads).baseName], file(params.reads, checkIfExists: true) ]
 
-    FASTQC ( [meta, file(params.fastq)] )
+    FASTQC (
+        ch_reads
+    )
 
 }

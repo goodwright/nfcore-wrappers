@@ -2,21 +2,21 @@
     "inputs": {
         "file_options": {
             "name": "File options",
-            "description": "Files needed to run the module.",
+            "description": "Files needed to run the module",
             "properties": {
                 "fasta": {
                     "name": "FASTA",
                     "type": "file",
                     "pattern": "fa$|fasta$|fa\\.gz$|fasta\\.gz$",
-                    "required": true,
-                    "description": "A FASTA file to index."
+                    "required": "true",
+                    "description": "A genome FASTA file"
                 },
                 "gtf": {
                     "name": "GTF",
                     "type": "file",
                     "pattern": "gtf$|gtf\\.gz$|gff$|gff\\.gz$",
-                    "required": true,
-                    "description": "A GTF annotation file."
+                    "required": "true",
+                    "description": "A GTF annotation file"
                 }
             }
         }

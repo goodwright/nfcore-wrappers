@@ -1,11 +1,13 @@
-nextflow.enable.dsl=2
+#!/usr/bin/env nextflow
 
 include { TRIMGALORE } from "../modules/nf-core/trimgalore/main"
 
 workflow {
 
-    meta = [id:file(params.fastq).name, single_end: true]
+    ch_reads = [ [id:file(params.reads).baseName, single_end: true], file(params.reads, checkIfExists: true) ]
 
-    TRIMGALORE ( [meta, file(params.fastq)] )
+    TRIMGALORE (
+        ch_reads
+    )
 
 }

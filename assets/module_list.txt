@@ -1,0 +1,4 @@
+bowtie/build
+fastqc
+star/genomegenerate
+trimgalore

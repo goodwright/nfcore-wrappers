@@ -2,14 +2,14 @@
     "inputs": {
         "file_options": {
             "name": "File options",
-            "description": "Files needed to run the module.",
+            "description": "Files needed to run the module",
             "properties": {
-                "fastq": {
+                "reads": {
                     "name": "FASTQ",
                     "type": "file",
                     "pattern": "fq\\.gz$|fastq\\.gz$",
-                    "required": true,
-                    "description": "A FASTQ file to clean up."
+                    "required": "true",
+                    "description": "A FASTQ file to assess"
                 }
             }
         }
