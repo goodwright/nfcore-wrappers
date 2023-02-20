@@ -20,41 +20,61 @@ stdout = rich.console.Console()
 rich.traceback.install(console=stderr, width=200, word_wrap=True, extra_lines=1)
 
 test_data_paths = {
-    "fasta" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta",
-    "reads" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
-    "gtf" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.gtf"
+    "fasta": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta",
+    "reads": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
+    "gtf": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.gtf",
 }
 
 file_type_info = {
-    "fasta" : { "name": "FASTA", "type": "file", "pattern": "fa$|fasta$|fa\\\.gz$|fasta\\\.gz$", "desc": "A genome FASTA file"},
-    "reads" : { "name": "FASTQ", "type": "file", "pattern": "fq\\\.gz$|fastq\\\.gz$", "desc": "A FASTQ file to assess"},
-    "gtf" : { "name": "GTF", "type": "file", "pattern": "gtf$|gtf\\\.gz$|gff$|gff\\\.gz$", "desc": "A GTF annotation file"}
+    "fasta": {
+        "name": "FASTA",
+        "type": "file",
+        "pattern": "fa$|fasta$|fa\\\.gz$|fasta\\\.gz$",
+        "desc": "A genome FASTA file",
+    },
+    "reads": {
+        "name": "FASTQ",
+        "type": "file",
+        "pattern": "fq\\\.gz$|fastq\\\.gz$",
+        "desc": "A FASTQ file to assess",
+    },
+    "gtf": {
+        "name": "GTF",
+        "type": "file",
+        "pattern": "gtf$|gtf\\\.gz$|gff$|gff\\\.gz$",
+        "desc": "A GTF annotation file",
+    },
 }
+
 
 def resolve_input(input):
     resolved = False
     start_index = 0
     output = {"text": input, "vars": []}
-    input_split = input.split(',')
+    input_split = input.split(",")
 
     if "tuple" in input_split[0]:
         # Will be in format tuple val(meta), arg1, arg2, arg3
         # Need to parse the last n args
         start_index = 1
-    
+
     input_split = input_split[start_index:]
-    
+
     for arg in input_split:
         arg_st = arg.strip()
         arg_info = {"type": "UNKNOWN"}
 
         if "val" in arg_st:
             arg_info["type"] = "val"
-            arg_info["name"] = arg_st.replace("val", "").replace("(","").replace(")","").strip()
+            arg_info["name"] = (
+                arg_st.replace("val", "").replace("(", "").replace(")", "").strip()
+            )
             output["vars"].append(arg_info)
         if "path" in arg_st:
             arg_info["type"] = "path"
-            arg_info["name"] = arg_st.replace("path", "").replace("(","").replace(")","").strip()
+            arg_info["name"] = (
+                arg_st.replace("path", "").replace("(", "").replace(")", "").strip()
+            )
             output["vars"].append(arg_info)
 
     return output
@@ -77,12 +97,12 @@ def main(target):
         exit(1)
 
     # Calc module name
-    module_name = '_'.join(target.split('/')).upper()
+    module_name = "_".join(target.split("/")).upper()
 
     # Scan module
     log.info(f"Scanning module {module_name}")
 
-    # Parse the input lines
+    # Parse the input lines
     inputs = []
     in_range = False
     with open(Path(main_path), "r") as fh:
@@ -105,7 +125,7 @@ def main(target):
         input_info.append(r_input)
         log.info(r_input)
 
-    # Write the wrapper
+    # Write the wrapper
     log.info(f"Creating wrapper for {module_name}")
 
     file_list = []
@@ -113,31 +133,35 @@ def main(target):
     param_list = []
 
     for input in input_info:
-        input_name = input['vars'][0]['name']
+        input_name = input["vars"][0]["name"]
         file_str = f"ch_{input_name} = "
 
-        if "meta" not in input['text']:
-            if len(input['vars']) == 1:
+        if "meta" not in input["text"]:
+            if len(input["vars"]) == 1:
                 file_str = file_str + f"file(params.{input_name}, checkIfExists: true)"
                 param_list.append(input_name)
             else:
                 file_str = file_str + "["
-                for var in input['vars']:
-                    file_str = file_str + f"file(params.{var['name']}, checkIfExists: true), "
+                for var in input["vars"]:
+                    file_str = (
+                        file_str + f"file(params.{var['name']}, checkIfExists: true), "
+                    )
                 file_str = file_str[:-2]
                 file_str = file_str + "]"
         else:
             file_str = file_str + f"[ [id:file(params.{input_name}).baseName], "
 
-            if len(input['vars']) == 1:
+            if len(input["vars"]) == 1:
                 file_str = file_str + f"file(params.{input_name}, checkIfExists: true) "
                 param_list.append(input_name)
             else:
-                for var in input['vars']:
-                    file_str = file_str + f"file(params.{var['name']}, checkIfExists: true), "
-                    param_list.append(var['name'])
+                for var in input["vars"]:
+                    file_str = (
+                        file_str + f"file(params.{var['name']}, checkIfExists: true), "
+                    )
+                    param_list.append(var["name"])
                 file_str = file_str[:-2]
-            
+
             file_str = file_str + "]"
 
         file_list.append(file_str)
@@ -146,7 +170,9 @@ def main(target):
     wrapper_path = path.join("./wrappers", module_name.lower() + ".nf")
     with open(Path(wrapper_path), "w") as fh:
         fh.write("#!/usr/bin/env nextflow\n\n")
-        fh.write(f"include {{ {module_name} }} from \"../modules/nf-core/{target}/main\"\n\n")
+        fh.write(
+            f'include {{ {module_name} }} from "../modules/nf-core/{target}/main"\n\n'
+        )
         fh.write("workflow {\n\n")
 
         for file_str in file_list:
@@ -163,7 +189,7 @@ def main(target):
         fh.write(f"\n    )\n\n")
         fh.write("}\n")
 
-    # Write the test
+    # Write the test
     log.info(f"Creating test for {module_name}")
     test_path = path.join("./tests/wrappers/", "test_" + module_name.lower() + ".yml")
 
@@ -176,41 +202,41 @@ def main(target):
             command_str = command_str + "{PARAM-TODO}"
 
     with open(Path(test_path), "w") as fh:
-        fh.write(f"- name: \"test_wrappers_{module_name.lower()}\"\n")
+        fh.write(f'- name: "test_wrappers_{module_name.lower()}"\n')
         fh.write(f"  {command_str}\n")
         fh.write("  tags:\n")
-        fh.write("    - \"wrappers\"\n")
-        fh.write("    - \"wrappers/modules\"\n")
-        fh.write(f"    - \"wrappers/modules/{module_name.lower()}\"\n")
+        fh.write('    - "wrappers"\n')
+        fh.write('    - "wrappers/modules"\n')
+        fh.write(f'    - "wrappers/modules/{module_name.lower()}"\n')
 
-    # Write the schema
+    # Write the schema
     log.info(f"Creating schema for {module_name}")
     schema_path = path.join("./schema", module_name.lower() + ".json")
 
     with open(Path(schema_path), "w") as fh:
         fh.write("{\n")
-        fh.write("    \"inputs\": {\n")
-        fh.write("        \"file_options\": {\n")
-        fh.write("            \"name\": \"File options\",\n")
-        fh.write("            \"description\": \"Files needed to run the module\",\n")
-        fh.write("            \"properties\": {\n")
+        fh.write('    "inputs": {\n')
+        fh.write('        "file_options": {\n')
+        fh.write('            "name": "File options",\n')
+        fh.write('            "description": "Files needed to run the module",\n')
+        fh.write('            "properties": {\n')
 
         for idx, param in enumerate(param_list):
-            fh.write(f"                \"{param}\": {{\n")
+            fh.write(f'                "{param}": {{\n')
 
             if param in file_type_info:
                 info = file_type_info[param]
                 fh.write(f"                    \"name\": \"{info['name']}\",\n")
                 fh.write(f"                    \"type\": \"{info['type']}\",\n")
                 fh.write(f"                    \"pattern\": \"{info['pattern']}\",\n")
-                fh.write(f"                    \"required\": \"true\",\n")
+                fh.write(f'                    "required": "true",\n')
                 fh.write(f"                    \"description\": \"{info['desc']}\"\n")
             else:
-                fh.write(f"                    \"name\": \"UNKNOWN\",\n")
-                fh.write(f"                    \"type\": \"UNKNOWN\",\n")
-                fh.write(f"                    \"pattern\": \"UNKNOWN\",\n")
-                fh.write(f"                    \"required\": true,\n")
-                fh.write(f"                    \"description\": \"UNKNOWN\"\n")
+                fh.write(f'                    "name": "UNKNOWN",\n')
+                fh.write(f'                    "type": "UNKNOWN",\n')
+                fh.write(f'                    "pattern": "UNKNOWN",\n')
+                fh.write(f'                    "required": true,\n')
+                fh.write(f'                    "description": "UNKNOWN"\n')
 
             if idx == len(param_list) - 1:
                 fh.write("                }\n")
@@ -220,7 +246,7 @@ def main(target):
         fh.write("            }\n")
         fh.write("        }\n")
         fh.write("    },\n")
-        fh.write("    \"outputs\": [\n")
+        fh.write('    "outputs": [\n')
         fh.write("    ]\n")
         fh.write("}\n")
 
@@ -245,5 +271,5 @@ if __name__ == "__main__":
         )
     )
 
-    # Run main
+    # Run main
     main(args.target)
