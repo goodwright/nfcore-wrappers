@@ -1,5 +1,5 @@
 - name: "test_wrappers_bowtie_build"
-  command: nextflow run ./wrappers/bowtie_build.nf -c ./tests/config/nextflow.config --fasta https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta 
+  command: nextflow run ./wrappers/bowtie_build.nf -c ./tests/config/nextflow.config --fasta https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta
   tags:
     - "wrappers/"
     - "wrappers/modules"

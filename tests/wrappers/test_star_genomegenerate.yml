@@ -1,5 +1,5 @@
 - name: "test_wrappers_star_genomegenerate"
-  command: nextflow run ./wrappers/star_genomegenerate.nf -c ./tests/config/nextflow.config --fasta https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta --gtf https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.gtf 
+  command: nextflow run ./wrappers/star_genomegenerate.nf -c ./tests/config/nextflow.config --fasta https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta --gtf https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.gtf
   tags:
     - "wrappers"
     - "wrappers/modules"
