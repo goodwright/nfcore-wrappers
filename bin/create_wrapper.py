@@ -19,6 +19,10 @@ stderr = rich.console.Console(stderr=True)
 stdout = rich.console.Console()
 rich.traceback.install(console=stderr, width=200, word_wrap=True, extra_lines=1)
 
+test_data_paths = {
+    "fasta" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta"
+}
+
 def resolve_input(input):
     resolved = False
     start_index = 0
@@ -93,7 +97,80 @@ def main(target):
         input_info.append(r_input)
         log.info(r_input)
 
+    # Write the wrapper
     log.info(f"Creating wrapper for {module_name}")
+
+    file_list = []
+    channel_list = []
+    param_list = []
+
+    for input in input_info:
+        input_name = input['vars'][0]['name']
+        file_str = f"ch_{input_name} = "
+
+        if "meta" not in input['text']:
+            if len(input['vars']) == 1:
+                file_str = file_str + f"file(params.{input_name}, checkIfExists: true)"
+                param_list.append(input_name)
+            else:
+                file_str = file_str + "["
+                for var in input['vars']:
+                    file_str = file_str + f"file(params.{var['name']}, checkIfExists: true), "
+                file_str = file_str[:-2]
+                file_str = file_str + "]"
+        else:
+            file_str = file_str + f"[ id:params.{input_name}.baseName, "
+
+            if len(input['vars']) == 1:
+                file_str = file_str + f"file(params.{input_name}, checkIfExists: true) "
+                param_list.append(input_name)
+            else:
+                for var in input['vars']:
+                    file_str = file_str + f"file(params.{var['name']}, checkIfExists: true), "
+                    param_list.append(var['name'])
+                file_str = file_str[:-2]
+            
+            file_str = file_str + "]"
+
+        file_list.append(file_str)
+        channel_list.append(f"ch_{input_name}")
+
+    wrapper_path = path.join("./wrappers", module_name.lower() + ".nf")
+    with open(Path(wrapper_path), "w") as fh:
+        fh.write("nextflow.enable.dsl=2\n\n")
+        fh.write(f"include {{ {module_name} }} from \"../modules/nf-core/{target}/main\" \n\n")
+        fh.write("workflow {\n\n")
+
+        for file_str in file_list:
+            fh.write(f"    {file_str}\n")
+
+        fh.write(f"\n    {module_name} (\n")
+
+        for idx, param in enumerate(channel_list):
+            if idx == 0:
+                fh.write(f"        {param}")
+            else:
+                fh.write(f",\n        {param}")
+
+        fh.write(f"\n    )\n\n")
+        fh.write("}\n")
+
+    # Write the test
+    log.info(f"Creating test for {module_name}")
+    test_path = path.join("./tests/wrappers/", "test_" + module_name.lower() + ".yml")
+
+    command_str = f"command: nextflow run ./wrappers/{module_name.lower()}.nf -c ./tests/config/nextflow.config "
+    for param in param_list:
+        command_str = command_str + f"--{param} "
+        if param in test_data_paths:
+            command_str = command_str + f"{test_data_paths[param]} "
+        else:
+            command_str = command_str + "{PARAM-TODO}"
+
+    with open(Path(test_path), "w") as fh:
+        fh.write(f"- name: \"test_wrappers_{module_name.lower()}\"\n")
+        fh.write(f"  {command_str}\n")
+
 
 
 if __name__ == "__main__":
