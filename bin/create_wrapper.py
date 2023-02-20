@@ -20,11 +20,13 @@ stdout = rich.console.Console()
 rich.traceback.install(console=stderr, width=200, word_wrap=True, extra_lines=1)
 
 test_data_paths = {
-    "fasta" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta"
+    "fasta" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta",
+    "reads" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz"
 }
 
 file_type_info = {
-    "fasta" : { "name": "FASTA", "type": "file", "pattern": "fa$|fasta$|fa\\\.gz$|fasta\\\.gz$", "desc": "A genome FASTA file"}
+    "fasta" : { "name": "FASTA", "type": "file", "pattern": "fa$|fasta$|fa\\\.gz$|fasta\\\.gz$", "desc": "A genome FASTA file"},
+    "reads" : { "name": "FASTQ", "type": "file", "pattern": "fq\\\.gz$|fastq\\\.gz$", "desc": "A FASTQ file to assess"}
 }
 
 def resolve_input(input):
