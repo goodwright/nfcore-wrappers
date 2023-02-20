@@ -23,6 +23,10 @@ test_data_paths = {
     "fasta" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta"
 }
 
+file_type_info = {
+    "fasta" : { "name": "FASTA", "type": "file", "pattern": "fa$|fasta$|fa\\\.gz$|fasta\\\.gz$", "desc": "A genome FASTA file"}
+}
+
 def resolve_input(input):
     resolved = False
     start_index = 0
@@ -170,7 +174,53 @@ def main(target):
     with open(Path(test_path), "w") as fh:
         fh.write(f"- name: \"test_wrappers_{module_name.lower()}\"\n")
         fh.write(f"  {command_str}\n")
+        fh.write("  tags:\n")
+        fh.write("    - \"wrappers/\"\n")
+        fh.write("    - \"wrappers/modules\"\n")
+        fh.write(f"    - \"wrappers/modules/{module_name.lower()}\"\n")
 
+    # Write the schema
+    log.info(f"Creating schema for {module_name}")
+    schema_path = path.join("./schema", module_name.lower() + ".json")
+
+    with open(Path(schema_path), "w") as fh:
+        fh.write("{\n")
+        fh.write("    \"inputs\": {\n")
+        fh.write("        \"file_options\": {\n")
+        fh.write("            \"name\": \"File options\",\n")
+        fh.write("            \"description\": \"Files needed to run the module\",\n")
+        fh.write("            \"properties\": {\n")
+
+        for idx, param in enumerate(param_list):
+            fh.write(f"                \"{param}\": {{\n")
+
+            if param in file_type_info:
+                info = file_type_info[param]
+                fh.write(f"                    \"name\": \"{info['name']}\",\n")
+                fh.write(f"                    \"type\": \"{info['type']}\",\n")
+                fh.write(f"                    \"pattern\": \"{info['pattern']}\",\n")
+                fh.write(f"                    \"required\": \"true\",\n")
+                fh.write(f"                    \"description\": \"{info['desc']}\"\n")
+            else:
+                fh.write(f"                    \"name\": \"UNKNOWN\",\n")
+                fh.write(f"                    \"type\": \"UNKNOWN\",\n")
+                fh.write(f"                    \"pattern\": \"UNKNOWN\",\n")
+                fh.write(f"                    \"required\": \"true\",\n")
+                fh.write(f"                    \"description\": \"UNKNOWN\"\n")
+
+            if idx == len(param_list) - 1:
+                fh.write("                }\n")
+            else:
+                fh.write("                },\n")
+
+        fh.write("            }\n")
+        fh.write("        }\n")
+        fh.write("    },\n")
+        fh.write("    \"outputs\": [\n")
+        fh.write("    ]\n")
+        fh.write("}\n")
+
+        log.warning("Make sure to add the test to the CI when complete!")
 
 
 if __name__ == "__main__":
