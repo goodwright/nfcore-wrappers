@@ -31,6 +31,7 @@ jobs:
         profile: ["docker", "singularity"]
         tags:
           # Modules
+          - wrappers/modules/bowtie_build
           - wrappers/modules/fastqc
           - wrappers/modules/star
           - wrappers/modules/trimgalore
