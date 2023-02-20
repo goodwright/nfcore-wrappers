@@ -20,13 +20,15 @@ stdout = rich.console.Console()
 rich.traceback.install(console=stderr, width=200, word_wrap=True, extra_lines=1)
 
 test_data_paths = {
-    "fasta" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/genome.fasta",
-    "reads" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz"
+    "fasta" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta",
+    "reads" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
+    "gtf" : "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.gtf"
 }
 
 file_type_info = {
     "fasta" : { "name": "FASTA", "type": "file", "pattern": "fa$|fasta$|fa\\\.gz$|fasta\\\.gz$", "desc": "A genome FASTA file"},
-    "reads" : { "name": "FASTQ", "type": "file", "pattern": "fq\\\.gz$|fastq\\\.gz$", "desc": "A FASTQ file to assess"}
+    "reads" : { "name": "FASTQ", "type": "file", "pattern": "fq\\\.gz$|fastq\\\.gz$", "desc": "A FASTQ file to assess"},
+    "gtf" : { "name": "GTF", "type": "file", "pattern": "gtf$|gtf\\\.gz$|gff$|gff\\\.gz$", "desc": "A GTF annotation file"}
 }
 
 def resolve_input(input):
