@@ -33,7 +33,7 @@ jobs:
           # Modules
           - wrappers/modules/bowtie_build
           - wrappers/modules/fastqc
-          - wrappers/modules/star
+          - wrappers/modules/star_genomegenerate
           - wrappers/modules/trimgalore
     steps:
       - name: Checkout Code
