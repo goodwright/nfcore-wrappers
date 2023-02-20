@@ -1,4 +1,4 @@
 bowtie/build
 fastqc
-star_genomegenerate
+star/genomegenerate
 trimgalore
