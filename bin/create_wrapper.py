@@ -144,7 +144,7 @@ def main(target):
     wrapper_path = path.join("./wrappers", module_name.lower() + ".nf")
     with open(Path(wrapper_path), "w") as fh:
         fh.write("nextflow.enable.dsl=2\n\n")
-        fh.write(f"include {{ {module_name} }} from \"../modules/nf-core/{target}/main\" \n\n")
+        fh.write(f"include {{ {module_name} }} from \"../modules/nf-core/{target}/main\"\n\n")
         fh.write("workflow {\n\n")
 
         for file_str in file_list:

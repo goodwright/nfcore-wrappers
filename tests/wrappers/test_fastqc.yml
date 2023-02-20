@@ -1,0 +1,6 @@
+- name: "test_wrappers_fastqc"
+  command: nextflow run ./wrappers/fastqc.nf -c ./tests/config/nextflow.config --reads https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/fastq/test_1.fastq.gz 
+  tags:
+    - "wrappers"
+    - "wrappers/modules"
+    - "wrappers/modules/fastqc"
