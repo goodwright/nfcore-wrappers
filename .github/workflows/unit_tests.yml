@@ -35,6 +35,7 @@ jobs:
           - wrappers/modules/fastqc
           - wrappers/modules/star_genomegenerate
           - wrappers/modules/trimgalore
+          - wrappers/modules/faidx
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3

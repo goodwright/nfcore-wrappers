@@ -1,4 +1,5 @@
 bowtie/build
 fastqc
+samtools/faidx
 star/genomegenerate
 trimgalore

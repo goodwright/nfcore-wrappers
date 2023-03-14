@@ -15,6 +15,11 @@
             "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
             "installed_by": ["modules"]
           },
+          "samtools/faidx": {
+            "branch": "master",
+            "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773",
+            "installed_by": ["modules"]
+          },
           "star/genomegenerate": {
             "branch": "master",
             "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
