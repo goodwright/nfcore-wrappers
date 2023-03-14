@@ -4,7 +4,7 @@
             "name": "File options",
             "description": "Files needed to run the module",
             "properties": {
-                "reads": {
+                "fasta": {
                     "name": "FASTA",
                     "type": "file",
                     "pattern": "fn$|fa$|fasta$",
