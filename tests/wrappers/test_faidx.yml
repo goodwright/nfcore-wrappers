@@ -1,0 +1,6 @@
+- name: "test_wrappers_faidx"
+  command: nextflow run ./wrappers/faidx.nf -c ./tests/config/nextflow.config --fasta https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta
+  tags:
+    - "wrappers"
+    - "wrappers/modules"
+    - "wrappers/modules/faidx"

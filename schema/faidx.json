@@ -1,0 +1,25 @@
+{
+    "inputs": {
+        "file_options": {
+            "name": "File options",
+            "description": "Files needed to run the module",
+            "properties": {
+                "fasta": {
+                    "name": "FASTA",
+                    "type": "file",
+                    "pattern": "fn$|fa$|fasta$",
+                    "required": "true",
+                    "description": "A genome FASTA file."
+                }
+            }
+        }
+    },
+    "outputs": [
+        {
+            "name": "Faidx Index",
+            "description": "A genome index describing the locations of individual sequences within the original FASTA.",
+            "filetype": "fai",
+            "process": "SAMTOOLS_FAIDX"
+        }
+    ]
+}
