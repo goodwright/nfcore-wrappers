@@ -17,13 +17,13 @@
     "outputs": [
         {
             "name": "Trimmed FASTQ",
-            "description": "The trimmed FASTQ file containing only the biological sequences.",
+            "description": "A trimmed FASTQ file",
             "filetype": "fq.gz",
             "process": "TRIMGALORE"
         },
         {
             "name": "Trimming Report",
-            "description": "A text file summarising the trimming that was done.",
+            "description": "A text file summarising the trimming that was performed on the FASTQ file.",
             "filetype": "txt",
             "process": "TRIMGALORE"
         }
