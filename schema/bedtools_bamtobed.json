@@ -1,0 +1,18 @@
+{
+    "inputs": {
+        "file_options": {
+            "name": "File options",
+            "description": "Files needed to run the modules",
+            "properties": {
+                "bam": {
+                    "name": "BAM",
+                    "type": "file",
+                    "pattern": "bam",
+                    "description": "A binary read alignment file",
+                    "required": "true"
+                }
+            }
+        }
+    },
+    "outputs": []
+}

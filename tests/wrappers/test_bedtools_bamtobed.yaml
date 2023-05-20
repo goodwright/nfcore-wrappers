@@ -1,0 +1,6 @@
+- name: "test_wrappers_bedtools_bamtobed"
+  command: nextflow run ./wrappers/bedtools_bamtobed.nf -c ./tests/config/nextflow.config --bam https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/bam/test.paired_end.bam
+  tags:
+    - "wrappers"
+    - "wrappers/modules"
+    - "wrappers/modules/bedtools_bamtobed"
