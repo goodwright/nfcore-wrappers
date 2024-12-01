@@ -1,19 +1,19 @@
 {
-    "inputs": {
-        "file_options": {
+    "inputs": [
+        {
             "name": "File options",
             "description": "Files needed to run the module",
-            "properties": {
+            "params": {
                 "fasta": {
                     "name": "FASTA",
-                    "type": "file",
+                    "type": "data",
                     "pattern": "fa$|fasta$|fa\\.gz$|fasta\\.gz$",
-                    "required": "true",
+                    "required": true,
                     "description": "A genome FASTA file"
                 }
             }
         }
-    },
+    ],
     "outputs": [
         {
             "name": "Bowtie Index",
